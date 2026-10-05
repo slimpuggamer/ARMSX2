@@ -1944,7 +1944,14 @@ static bool cdvdCommandErrorHandler()
 static void cdvdWrite04(u8 rt)
 { // NCOMMAND
 	CDVD_LOG("cdvdWrite04: NCMD %s (%x) (ParamP = %x)", nCmdName[rt], rt, cdvd.NCMDParamPos);
-
+	if (rt == N_CD_CHG_SPDL_CTRL) // CdChgSpdlCtrl
+	{
+		Console.WriteLn("sceCdChgSpdlCtrl(%d)", cdvd.NCMDParamBuff[0]);
+		cdvdSetIrq();
+		cdvd.NCMDParamPos = 0;
+		cdvd.NCMDParamCnt = 0;
+		return;
+	}
 	if (!(cdvd.Ready & CDVD_DRIVE_READY))
 	{
 		DevCon.Warning("CDVD: Error drive not ready on command issue");
